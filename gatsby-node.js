@@ -4,4 +4,23 @@
  * See: https://www.gatsbyjs.com/docs/node-apis/
  */
 
-// You can delete this file if you're not using it
+const { registerComponent, createResolverField } = require(`gatsby-plugin-graphql-component`)
+
+let id = null
+
+exports.sourceNodes = async ({ actions }) => {
+  id = await registerComponent({
+    component: require.resolve(`./src/components/Alpha`),
+  })
+}
+
+exports.createResolvers = ({ createResolvers }) => {
+  const resolvers = {
+    Query: {
+      Alpha: createResolverField({
+        resolve: async () => id,
+      }),
+    },
+  }
+  createResolvers(resolvers)
+}
